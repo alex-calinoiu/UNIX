@@ -3,11 +3,13 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <string.h>
 
 int main(int argc, char *argv[])
 {
-	DIR * p1, *tmp;
+	DIR * p1;
 	struct dirent * p2;
+	char *x;
 	int fd;
 	if (argc != 2)
 	{
@@ -19,12 +21,16 @@ int main(int argc, char *argv[])
 		printf ("Error opening folder!\n");
 		exit (EXIT_FAILURE);
 	}
+	x=malloc(1024);
 	while ((p2=readdir(p1)) != NULL)
 	{
-		if (((tmp=opendir(p2->d_name)) == NULL) && (p2->d_name[0] != '.'))
+	    	strcpy (x,argv[1]);
+	    	strcat (x,"/");
+		strcat (x,p2->d_name);
+		if (((opendir(x)) == NULL) && (p2->d_name[0] != '.'))
 		{
 			printf ("File: %s\t",p2->d_name);
-			if ((fd = (open (p2->d_name,O_RDONLY))) == -1)
+			if ((fd = (open (x,O_RDONLY))) == -1)
 			{
 				printf ("Error opening file!\n");
 			} else
@@ -38,9 +44,8 @@ int main(int argc, char *argv[])
 			printf ("Folder: %s\n",p2->d_name);
 		}
 	}
+	free (x);
 	closedir (p1);
-	closedir (tmp);
 	close (fd);
 	return 0;
 }
-/*blablabla*/
