@@ -44,8 +44,5 @@ int main(int argc, char *argv[])
 			printf ("Folder: %s\n",p2->d_name);
 		}
 	}
-	free (x);
-	closedir (p1);
-	close (fd);
 	return 0;
 }
