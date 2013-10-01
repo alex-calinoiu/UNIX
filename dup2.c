@@ -9,19 +9,19 @@ int main(int argc, char *argv[])
     if (argc != 3)
     {
 	printf ("Argument error!\n");
-	exit (-1);
+	exit (EXIT_FAILURE);
     }
     fd1=atoi(argv[1]);
     fd2=atoi(argv[2]);
     if ((temp_fd = dup(fd1)) == -1)
     {
 	printf ("First fd doesn't exist!\n");
-	exit (-1);
+	exit (EXIT_FAILURE);
     }
     if (fd1 == fd2)
     {
 	printf ("FDs equal\n");
-	exit (0);
+	exit (EXIT_SUCCESS);
     }
     close (temp_fd);
     if (fd2 > fd1)
