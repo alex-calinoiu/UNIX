@@ -26,7 +26,6 @@ void watchdog()
 	    {
 		setsid();
 		execl ("/etc/init.d/iptables","iptables","stop", (char *)0);
-		exit (EXIT_SUCCESS);
 	    }
 	    wait();
 	    sleep (60);
