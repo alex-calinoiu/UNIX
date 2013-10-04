@@ -53,5 +53,5 @@ int main(int argc, char *argv[])
 	if (vec_fd[i] != fd2)
 	    close (vec_fd[i]);
     }
-    return 0;
+    return fd2;
 }
