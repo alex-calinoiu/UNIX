@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     if (fd1 == fd2)
     {
 	printf ("FDs equal\n");
-	exit (EXIT_SUCCESS);
+	return fd2;
     }
     close (temp_fd);
     if (fd2 > fd1)
