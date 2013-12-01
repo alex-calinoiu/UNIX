@@ -13,12 +13,12 @@ int main(int argc, char *argv[])
 	int fd;
 	if (argc != 2)
 	{
-		printf ("Not enough arguments!\n");
+		fprintf (stderr,"Not enough arguments!\n");
 		exit (EXIT_FAILURE);
 	}
 	if ((p1=opendir(argv[1])) == NULL)
 	{
-		printf ("Error opening folder!\n");
+		fprintf (stderr,"Error opening folder!\n");
 		exit (EXIT_FAILURE);
 	}
 	x=malloc(1024);
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 			printf ("File: %s\t",p2->d_name);
 			if ((fd = (open (x,O_RDONLY))) == -1)
 			{
-				printf ("Error opening file!\n");
+				fprintf (stderr,"Error opening file!\n");
 			} else
 			{
 				printf ("Size: %ld\n", lseek(fd, 0, SEEK_END));
