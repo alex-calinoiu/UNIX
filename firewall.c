@@ -18,6 +18,7 @@ void stop()
 	if (pid == 0)
 	{
 		setsid();
+		chdir ("/");
 		while (1)
 		{
 			pid = fork();
