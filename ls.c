@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 	x=malloc(1024);
 	while ((p2=readdir(p1)) != NULL)
 	{
-	    	strcpy (x,argv[1]);
-	    	strcat (x,"/");
+		strcpy (x,argv[1]);
+		strcat (x,"/");
 		strcat (x,p2->d_name);
 		if (((opendir(x)) == NULL) && (p2->d_name[0] != '.'))
 		{
@@ -37,11 +37,12 @@ int main(int argc, char *argv[])
 			{
 				printf ("Size: %ld\n", lseek(fd, 0, SEEK_END));
 			}
-		}
-		else
-		if ((p2 -> d_name[0]) != '.')
+		} else
 		{
+			if ((p2 -> d_name[0]) != '.')
+			{
 			printf ("Folder: %s\n",p2->d_name);
+			}
 		}
 	}
 	return 0;
