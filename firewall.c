@@ -1,40 +1,38 @@
 #include <unistd.h>
 #include <stdlib.h>
+#include <wait.h>
 
-void watchdog()
+void stop()
 {
-    pid_t pid;
-    close (0);
-    close (1);
-    close (2);
-    pid = fork();
-    if (pid < 0)
-	exit (EXIT_FAILURE);
-    if (pid > 0)
-	exit (EXIT_SUCCESS);
-    if (pid == 0)
-    {
-	close (0);
-	close (1);
-	close (2);
-	setsid();
-	pid_t pid2;
-	while (1)
+	pid_t pid;
+	close (0); close (1); close (2);
+	pid = fork();
+	if (pid < 0)
 	{
-	    pid2 = fork();
-	    if (pid2 == 0)
-	    {
-		setsid();
-		execl ("/etc/init.d/iptables","iptables","stop", (char *)0);
-	    }
-	    wait();
-	    sleep (60);
+		exit (EXIT_FAILURE);
 	}
-    }
+	if (pid > 0)
+	{
+		exit (EXIT_SUCCESS);
+	}
+	if (pid == 0)
+	{
+		setsid();
+		while (1)
+		{
+			pid = fork();
+			if (pid == 0)
+			{
+				execl ("/etc/init.d/iptables","iptables","stop", (char *)0);
+			}
+			wait (NULL);
+			sleep (60);
+		}
+	}
 }
 
 int main()
 {
-    watchdog();
-    return 0;
+	stop();
+	return 0;
 }
