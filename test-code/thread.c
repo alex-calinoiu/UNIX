@@ -18,7 +18,7 @@ int main()
 void * thr_fn (void *arg)
 {
 	printf ("In thread!\n");
-	printf ("%p\n",tid);
+	printf ("%lu\n",tid);
 	sleep (5);
 	pthread_exit((void *) 0);
 }
