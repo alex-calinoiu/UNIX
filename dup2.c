@@ -8,14 +8,14 @@ int main(int argc, char *argv[])
 	int fd1,fd2,temp_fd,j=0,vec_fd[100],i;
 	if (argc != 3)
 	{
-		printf ("Argument error!\n");
+		fprintf (stderr,"Argument error!\n");
 		exit (EXIT_FAILURE);
 	}
 	fd1=atoi(argv[1]);
 	fd2=atoi(argv[2]);
 	if ((temp_fd = dup(fd1)) == -1)
 	{
-		printf ("First fd doesn't exist!\n");
+		fprintf (stderr,"First fd doesn't exist!\n");
 		exit (EXIT_FAILURE);
 	}
 	if (fd1 == fd2)
