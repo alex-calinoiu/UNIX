@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
-#include <signal.h>
 
 #define SALT_SIZE 13
 #define MAX_PASS_SIZE 50
@@ -33,7 +32,7 @@ int main(int argc, char *argv[])
     }
     if ((fd=find_user (user)) < 0)
     {
-        exit (1);
+        exit (-1);
     }
     scanf ("%50s",pass);
     hash=crypt (pass,gen_salt());
@@ -45,7 +44,7 @@ int main(int argc, char *argv[])
     offset2 = lseek (fd,0,SEEK_CUR);
 
 /*From the current offset, calculate, allocate memory,
-  and read all the bytes untill EOF, then return to the previous offset*/
+  and read all the bytes until EOF, then return to the previous offset*/
     bytes_left = (abs (lseek(fd,0,SEEK_CUR) - lseek (fd,0,SEEK_END)));
     fields = malloc (bytes_left+1);
     memset (fields,0,bytes_left+1);
@@ -89,8 +88,8 @@ char *gen_salt()
     strcat (y,"$6$");
     if ((fd = open ("/dev/urandom",O_RDONLY)) < 0)
     {
-        fprintf (stderr,"Can't gather entropy. Terminating!\n");
-        raise (SIGKILL);
+        fprintf (stderr,"Can't gather entropy. Exiting!\n");
+        exit (-1);
     }
 /*Read one byte at a time until 8 bytes
   from the [a-zA-Z./] interval are read.*/
@@ -115,7 +114,7 @@ char *gen_salt()
     return y;
 }
 
-/*Function to see if the suer exists on the system*/
+/*Function to see if the user exists on the system*/
 int find_user (char *user)
 {
     char *tmp_user;
@@ -124,14 +123,14 @@ int find_user (char *user)
     tmp_user = malloc (USER_SIZE);
     us_len = strlen(user);
 
-/*Kill the process if there is an error opening the shadow file*/
+/*Exit if there is an error opening the shadow file*/
     if ((fd = open("/etc/shadow",O_RDWR)) < 0)
     {
-        fprintf (stderr,"Unable to open shadow file... Terminating!\n");
-        raise (SIGKILL);
+        fprintf (stderr,"Unable to open shadow file... Exiting!\n");
+        exit (-1);
     }
 
-/*Read the firs strlen(user) bytes from the beginning of the line*/
+/*Read the first strlen(user) bytes from the beginning of the line*/
     for (;;)
     {
         if ((read(fd,tmp_user,us_len)) != us_len)
