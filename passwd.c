@@ -17,7 +17,7 @@ int find_user (char *user);
 int main(int argc, char *argv[])
 {
     char *pass, *hash, *user, tmp[2]={0}, *fields;
-    int fd, i=0, ppp;
+    int fd, i=0, bytes_left;
     off_t offset, offset2;
     pass = malloc (MAX_PASS_SIZE);
     hash = malloc (HASH_SIZE);
@@ -43,20 +43,26 @@ int main(int argc, char *argv[])
         read (fd,tmp,1);
     } while (tmp[0] != ':');
     offset2 = lseek (fd,0,SEEK_CUR);
-    ppp = (abs (lseek(fd,0,SEEK_CUR) - lseek (fd,0,SEEK_END)));
-    fields = malloc (ppp+1);
-    memset (fields,0,ppp+1);
+
+/*From the current offset, calculate, allocate memory,
+  and read all the bytes untill EOF, then return to the previous offset*/
+    bytes_left = (abs (lseek(fd,0,SEEK_CUR) - lseek (fd,0,SEEK_END)));
+    fields = malloc (bytes_left+1);
+    memset (fields,0,bytes_left+1);
     lseek (fd,offset2,SEEK_SET);
-    read (fd,fields,ppp);
+    read (fd,fields,bytes_left);
     strcat (fields,"\0");
-    //fields[ppp-1]='\0';
     lseek (fd,offset,SEEK_SET);
+
+/*Write the final hash value into the file*/
     if ((write (fd,hash,(HASH_SIZE-1))) != (HASH_SIZE-1))
     {
         fprintf (stderr,"Error writing password in shadow file!\n");
         exit (-1);
     }
     write (fd,":",1);
+
+/*Write the remaining of the file after the hash was written*/
     for (;;)
     {
         tmp[0] = fields [i];
@@ -119,7 +125,7 @@ int find_user (char *user)
     us_len = strlen(user);
 
 /*Kill the process if there is an error opening the shadow file*/
-    if ((fd = open("shadow.bak",O_RDWR)) < 0)
+    if ((fd = open("/etc/shadow",O_RDWR)) < 0)
     {
         fprintf (stderr,"Unable to open shadow file... Terminating!\n");
         raise (SIGKILL);
