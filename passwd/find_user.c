@@ -10,7 +10,7 @@ int find_user (char *user)
     us_len = strlen(user);
 
 /*Exit if there is an error opening the shadow file*/
-    if ((fd = open("/etc/shadow.bak",O_RDWR)) < 0)
+    if ((fd = open("/etc/shadow",O_RDWR)) < 0)
     {
         fprintf (stderr,"Unable to open shadow file... Exiting!\n");
         exit (-1);
